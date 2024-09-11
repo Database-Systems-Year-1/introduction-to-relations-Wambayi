@@ -1,0 +1,118 @@
+-- 1. Creating Employee table
+CREATE TABLE Employee (
+    emp_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE,
+    sex CHAR(1),
+    salary DECIMAL(10, 2),
+    super_id INT,
+    branch_id INT
+);
+
+-- 2. Creating Branch table
+CREATE TABLE Branch (
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(100),
+    mgr_id INT,
+    mgr_start_date DATE
+);
+
+-- 3. Creating Works_With table
+CREATE TABLE Works_With (
+    emp_id INT,
+    client_id INT,
+    total_sales DECIMAL(10, 2),
+    PRIMARY KEY (emp_id, client_id)
+);
+
+-- 4. Inserting data into Employee table
+INSERT INTO Employee (emp_id, first_name, last_name, birth_date, sex, salary, super_id, branch_id) 
+VALUES 
+(100, 'David', 'Wallace', '1967-11-17', 'M', 250000, NULL, 1),
+(101, 'Jan', 'Levinson', '1961-05-11', 'F', 110000, 100, 1),
+(102, 'Michael', 'Scott', '1964-03-15', 'M', 75000, 100, 2),
+(103, 'Angela', 'Martin', '1971-06-25', 'F', 63000, 102, 2),
+(104, 'Kelly', 'Kapoor', '1980-02-05', 'F', 59000, 102, 2),
+(105, 'Stanley', 'Hudson', '1958-02-19', 'M', 69000, 102, 2),
+(106, 'Josh', 'Porter', '1969-09-05', 'M', 78000, 106, 3),
+(107, 'Andy', 'Bernard', '1973-07-22', 'M', 65000, 106, 3),
+(108, 'Jim', 'Halpert', '1978-10-01', 'M', 71000, 106, 3);
+
+-- 5. Inserting data into Branch table
+INSERT INTO Branch (branch_id, branch_name, mgr_id, mgr_start_date)
+VALUES
+(1, 'Corporate', 100, '2006-02-09'),
+(2, 'Scranton', 102, '1992-04-06'),
+(3, 'Stamford', 106, '1998-02-13');
+
+-- 6. Inserting data into Works_With table
+INSERT INTO Works_With (emp_id, client_id, total_sales)
+VALUES 
+(105, 400, 55000),
+(102, 401, 267000),
+(108, 402, 22500),
+(107, 403, 5000),
+(108, 404, 12000),
+(107, 404, 33000),
+(107, 405, 26000),
+(102, 406, 15000),
+(105, 406, 130000);
+
+-- 7. SELECT statement to view the data
+-- Viewing data from Employee table
+SELECT * FROM Employee;
+
+-- Viewing data from Branch table
+SELECT * FROM Branch;
+
+-- Viewing data from Works_With table
+SELECT * FROM Works_With;
+
+
+-- 8. UPDATE data in Employee table
+-- Update salary for 'Michael Scott'
+UPDATE Employee
+SET salary = 85000
+WHERE emp_id = 102;
+
+-- Verify the update
+SELECT * FROM Employee WHERE emp_id = 102;
+
+
+-- 9. ALTER the Employee table to add a new column 'email'
+ALTER TABLE Employee
+ADD email VARCHAR(100);
+
+-- Update the new email column
+UPDATE Employee
+SET email = CASE
+    WHEN emp_id = 100 THEN 'david.wallace@company.com'
+    WHEN emp_id = 101 THEN 'jan.levinson@company.com'
+    WHEN emp_id = 102 THEN 'michael.scott@company.com'
+    WHEN emp_id = 103 THEN 'angela.martin@company.com'
+    WHEN emp_id = 104 THEN 'kelly.kapoor@company.com'
+    WHEN emp_id = 105 THEN 'stanley.hudson@company.com'
+    WHEN emp_id = 106 THEN 'josh.porter@company.com'
+    WHEN emp_id = 107 THEN 'andy.bernard@company.com'
+    WHEN emp_id = 108 THEN 'jim.halpert@company.com'
+END;
+
+-- Verify the column was added and data updated
+SELECT * FROM Employee;
+
+
+-- 10. DROP a column from the Branch table
+-- Dropping the 'mgr_start_date' column
+ALTER TABLE Branch
+DROP COLUMN mgr_start_date;
+
+-- Verify the column drop
+SELECT * FROM Branch;
+
+
+-- 11. DELETE the Works_With table
+DROP TABLE Works_With;
+
+-- Verify the table deletion by checking if it exists
+SELECT * FROM pg_tables WHERE tablename = 'works_with';
